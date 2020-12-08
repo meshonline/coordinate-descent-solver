@@ -3,7 +3,7 @@ Coordinate descent solver for generic linear system
 
 Try using coordinate descent method to solve generic linear system.
 
-《坐标下降法解线性方程组》
+# 坐标下降法解线性方程组
 
 在实际项目中，有时候需要解线性方程组，如果用最小二乘法公式直接计算，对于很大的系数矩阵，速度慢，有时候无解。所以想寻找一种用迭代法解线性方程组的方法，首先要稳定，其次要总是有解。找了半天也没有合适的，于是干脆自己做一个吧。
 
@@ -42,7 +42,7 @@ c1*x = b - Ax0
 对于非对称矩阵，共轭梯度下降法就会发散，无法收敛，而坐标下降法可以收敛到稳定的解，因此可以用坐标下降法求解一般的线性方程组。
 
 下面是我用Python写的代码，函数的实现很简单，只有十五行，就可以解一般的线性方程组，是不是觉得很神奇呢？
-
+```python
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 7 17:07:32 2020
@@ -74,3 +74,4 @@ b = np.array([3., -3., 4.])
 guess = np.array([0., 0., 0.])
 x, k = coordinate_descent_method(A, b, guess, 300 * len(b), 1e-6)
 print("x = {} in {} iterations.".format(x.round(2), k))
+```
