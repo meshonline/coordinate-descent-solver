@@ -1,7 +1,46 @@
 # coordinate-descent-solver
 Coordinate descent solver for generic linear system
 
-Try using coordinate descent method to solve generic linear system.
+# Using coordinate descent method to solve linear equations
+(The Google translation version from the Chinese version)
+
+In actual projects, sometimes it is necessary to solve linear equations. If you use the least squares formula to calculate directly, the speed is slow for a large coefficient matrix, and sometimes there is no solution. So I want to find a way to solve linear equations by iterative method. Firstly, it must be stable, and secondly, there must always be a solution. After searching for a long time, there was no suitable one, so I just made one myself.
+
+There are many examples of the coordinate descent method used for regression, but the examples used to solve linear equations have not been seen yet, so let's start with this.
+
+Maybe it’s because my level is too low. I didn’t understand the source code after I quickly read the source code on GitHub. I didn’t read it at all. Let’s start from the concept, because I just finished reading "Basics of Linear Algebra for Machine Learning", so I’m very The geometric meaning of algebra has a feeling, this is very important.
+
+First analyze: Ax=b. For the iterative method, first give an initial x0 to start the iteration. This value can be any value, such as all zeros or random numbers. If the coefficients other than the first x component are fixed, the equation can be written as:
+
+c1\*(x1+x)+c2\*x2+...+cn\*xn = b
+
+Where c1...cn is the column of A, x1...xn is the initial component of x0, and x is the only unknown.
+
+After expanding the left side, move the constant term to the right side of the equation to get:
+
+c1\*x = b-(c1\*x1+c2\*x2+...+cn\*xn)
+
+That is:
+
+c1\*x = b-Ax0
+
+The left side of the equation is equivalent to a one-dimensional line passing through the origin in the high-dimensional space, and the right side can be understood as transforming the space point b to the high-dimensional space where Ax0 is located, and becomes a space point in the high-dimensional space.
+
+Draw an auxiliary line perpendicular to this straight line from this point. The intersection of the vertical line is the point closest to this point on the line, and the coordinates should be moved to the intersection of the vertical line.
+
+In linear algebra, the geometric meaning of the dot product is exactly the product of the modulus length of the projection of a vector on another vector and the modulus length of another vector, so the dot product of two vectors is divided by the modulus length of the other vector. Get the modulus length of the projection of a vector on another vector.
+
+The modulus length of the projection of a vector on another vector is the position of the vertical line. Its geometric meaning is to start from the initial x1 and how far to reach the closest position to the target. Therefore, the complete solution needs to be x1 plus one The modular length of the projection of a vector on another vector.
+
+After processing one x1 component, update x, then process the next x2 component, update x, until all x components are processed again.
+
+The iterative method is very slow. The above process has to be repeated many times to converge to a stable solution. For some equations, such as the case where there are more unknowns than the number of equations, it can't even converge to a stable solution, but in general, you will get a very stable solution. Good approximate optimal solution.
+
+I used the conjugate gradient descent method to check the equations of the symmetric matrix. The number of cycles required for the convergence of the coordinate descent method is dozens of times that of the conjugate gradient descent method, but because the calculation of the coordinate descent method is particularly simple, the actual calculation speed should be poor Not so much.
+
+For asymmetric matrices, the conjugate gradient descent method will diverge and fail to converge, while the coordinate descent method can converge to a stable solution, so the coordinate descent method can be used to solve general linear equations.
+
+The following is the code I wrote in Python. The implementation of the function is very simple. With only fifteen lines, you can solve general linear equations. Does it feel amazing?
 
 # 坐标下降法解线性方程组
 
