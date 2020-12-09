@@ -2,7 +2,7 @@
 Coordinate descent solver for generic linear system
 
 # Using coordinate descent method to solve linear equations
-(The Google translation version from the Chinese version)
+### This is the Google translation version from the Chinese version.
 
 In actual projects, sometimes it is necessary to solve linear equations. If you use the least squares formula to calculate directly, the speed is slow for a large coefficient matrix, and sometimes there is no solution. So I want to find a way to solve linear equations by iterative method. Firstly, it must be stable, and secondly, there must always be a solution. After searching for a long time, there was no suitable one, so I just made one myself.
 
@@ -41,7 +41,39 @@ I used the conjugate gradient descent method to check the equations of the symme
 For asymmetric matrices, the conjugate gradient descent method will diverge and fail to converge, while the coordinate descent method can converge to a stable solution, so the coordinate descent method can be used to solve general linear equations.
 
 The following is the code I wrote in Python. The implementation of the function is very simple. With only fifteen lines, you can solve general linear equations. Does it feel amazing?
-
+```python
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Dec 7 17:07:32 2020
+@author: Mingfen Wang
+"""
+ 
+import numpy as np
+ 
+def coordinate_descent_method(A, b, guess, N, TOR):
+    A_T = A.T
+    x = guess.copy()
+    k = 1
+    while k < N:
+        save_x = x.copy()
+        for i in range(len(x)):
+            b_in_Ax = b - np.dot(A, x)
+            foot = np.dot(b_in_Ax, A_T[i]) / np.dot(A_T[i], A_T[i])
+            x[i] = x[i] + foot
+        diff_x = x - save_x
+        if np.dot(diff_x, diff_x) < TOR:
+            break
+        k = k + 1
+    return x, k
+ 
+A = np.array([[1., -1., 0.],\
+              [-1., 2., 1.],\
+              [0., 1., 5.]])
+b = np.array([3., -3., 4.])
+guess = np.array([0., 0., 0.])
+x, k = coordinate_descent_method(A, b, guess, 300 * len(b), 1e-6)
+print("x = {} in {} iterations.".format(x.round(2), k))
+```
 # 坐标下降法解线性方程组
 
 在实际项目中，有时候需要解线性方程组，如果用最小二乘法公式直接计算，对于很大的系数矩阵，速度慢，有时候无解。所以想寻找一种用迭代法解线性方程组的方法，首先要稳定，其次要总是有解。找了半天也没有合适的，于是干脆自己做一个吧。
